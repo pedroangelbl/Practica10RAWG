@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  color: rgb(202, 200, 200);
+}
+
+body{
+  background-color: #121212;
+  font-family: 'Arial', system-ui, sans-serif;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #282828;
+  border-radius: 0.8rem;
+}
+
+.link{
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.link:hover{
+  background-color: #343434;
+}
+
+.card{
+  background-color: #484848;
+}
+
+@media (max-width: 735px) {
+  .navBar, ul{
+    display: flex;
+    flex-direction: column;
+  }
+}
