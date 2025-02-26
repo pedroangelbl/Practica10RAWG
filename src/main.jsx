@@ -4,10 +4,12 @@ import './index.css'
 import Home from './pages/homePage/Home'
 import ErrorPage from './pages/errorPage/ErrorPage'
 import Catalogo from './pages/catalogoPage/Catalogo'
-import GameDetail from './pages/GameDetail/GameDetail'
 import AppNavBar from './components/AppNavBar'
 import AppFooter from './components/AppFooter'
-import { loader as gameDetailsLoader } from './pages/GameDetail/GameDetail'
+import GameDetail, { loader as gameDetailsLoader } from './pages/GameDetail/GameDetail'
+import PublisherPage, { loader as publisherDetailsLoader } from './pages/PublisherPage/PublisherPage'
+import TagGamesPage, { loader as tagDetailsLoader} from './pages/TagGamesPage/TagGamesPage'
+import PublishersPage from './pages/PublishersPage/PublishersPage'
 
 function AppLayout(){
   return(
@@ -33,9 +35,23 @@ const router = createBrowserRouter([
         element: <Catalogo />
       },
       {
+        path: '/publishers',
+        element: <PublishersPage />
+      },
+      {
         path: '/gameDetail/:id',
         element: <GameDetail />,
         loader: gameDetailsLoader
+      },
+      {
+        path: '/publisher/:id',
+        element: <PublisherPage />,
+        loader: publisherDetailsLoader
+      },
+      {
+        path: '/games/tag/:id',
+        element: <TagGamesPage />,
+        loader: tagDetailsLoader
       }
     ]
   }
