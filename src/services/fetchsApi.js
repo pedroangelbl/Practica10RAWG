@@ -201,7 +201,7 @@ export const getPublishers = async () => {
         }
 
         const data = await response.json()
-        return data
+        return data 
     } catch (error) {
         console.error("Error fetching publishers:", error)
         throw error
