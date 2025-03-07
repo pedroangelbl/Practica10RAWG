@@ -1,89 +1,82 @@
-"use client"
-
-import { Carousel } from "flowbite-react"
-import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { getGames, getGamesByGenre, getUpcomingGames } from "../../services/fetchsApi"
+import { Carousel } from "flowbite-react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPopularGames, fetchActionGames, fetchUpcomingGames } from "../../redux/homeRedux/homeThunks";
+import { addFavorite, removeFavorite } from "../../redux/homeRedux/homeSlice";
 
 export default function Home() {
-    const [popularGames, setPopularGames] = useState([])
-    const [actionGames, setActionGames] = useState([])
-    const [upcomingGames, setUpcomingGames] = useState([])
-    const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch();
+  const { popularGames, actionGames, upcomingGames, favorites, loading } = useSelector(state => state.home);
 
-    useEffect(() => {
-        fetchAllGames()
-    }, [])
+  useEffect(() => {
+    dispatch(fetchPopularGames());
+    dispatch(fetchActionGames());
+    dispatch(fetchUpcomingGames());
+  }, [dispatch]);
 
-    const fetchAllGames = async () => {
-        setLoading(true)
-        try {
-            const popular = await getGames()
-            setPopularGames(popular)
+  const handleFavorite = (game) => {
+      if (favorites.some(fav => fav.id === game.id)) {
+          dispatch(removeFavorite(game.id));
+      } else {
+          dispatch(addFavorite(game));
+      }
+  };
 
-            const action = await getGamesByGenre(4)
-            setActionGames(action)
-
-            const upcoming = await getUpcomingGames()
-            setUpcomingGames(upcoming)
-        } catch (error) {
-            console.error("Error fetching games:", error)
-        } finally {
-            setLoading(false)
-        }
-    }
-    
-    // Función para renderizar una tarjeta de juego
-    const GameCard = ({ game }) => (
-        <Link
-            to={`/gameDetail/${game.id}`}
-            className="card group block rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105"
+  // Función para renderizar una tarjeta de juego
+  const GameCard = ({ game }) => (
+    <div key={game.id} className="relative card group block rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105">
+        <button 
+            onClick={() => handleFavorite(game)}
+            className="absolute top-2 right-2 text-xl z-10"
         >
-            <img
-                src={game.background_image}
-                alt={game.name}
-                className="w-full h-40 object-cover group-hover:opacity-80 transition-opacity"
+            {favorites.some(fav => fav.id === game.id) ? '❤️' : '🤍'}
+        </button>
+        <Link to={`/gameDetail/${game.id}`} className="block">
+            <img 
+                src={game.background_image} 
+                alt={game.name} 
+                className="w-full h-48 object-cover group-hover:opacity-80 transition-opacity"
             />
-            <div className="p-3">
-                <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-white truncate">{game.name}</h3>
-                <span className="text-yellow-400 font-bold">⭐ {game.rating}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 mt-2">
+            <div className="p-4">
+                <div className="text-yellow-400 font-bold text-lg">⭐ {game.rating}</div>
+                <h2 className="text-xl font-semibold text-white truncate">{game.name}</h2>
+            </div>
+            <div className="flex flex-wrap gap-1 p-4">
                 {game.genres?.slice(0, 2).map((genre) => (
                     <span key={genre.id} className="text-xs bg-neutral-700 text-white px-2 py-1 rounded">
                     {genre.name}
                     </span>
                 ))}
-                </div>
             </div>
         </Link>
-    )
+    </div>
+  );
 
-    // Componente para sección de juegos
-    const GameSection = ({ title, games, viewMoreLink }) => (
-        <div className="mt-12">
-        <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">{title}</h2>
-            <Link to={viewMoreLink} className="text-blue-500 hover:underline">
-            Ver más
-            </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {games.slice(0, 4).map((game) => (
-            <GameCard key={game.id} game={game} />
-            ))}
-        </div>
-        </div>
-    )
+  // Componente para sección de juegos
+  const GameSection = ({ title, games, viewMoreLink }) => (
+    <div className="mt-12">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">{title}</h2>
+        <Link to={viewMoreLink} className="text-blue-500 hover:underline">
+          Ver más
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {games.slice(0, 4).map((game) => (
+          <GameCard key={game.id} game={game} />
+        ))}
+      </div>
+    </div>
+  );
 
-    if (loading) {
-        return (
-        <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-        )
-    }
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -163,6 +156,5 @@ export default function Home() {
         </Link>
       </section>
     </div>
-  )
+  );
 }
-

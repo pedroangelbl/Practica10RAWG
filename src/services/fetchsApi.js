@@ -4,7 +4,7 @@ const BASE_URL = "https://api.rawg.io/api"
 // Función para obtener juegos populares
 export const getGames = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&ordering=-rating&page_size=20`)
+    const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&ordering=-rating&page_size=40`)
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`)
@@ -16,6 +16,40 @@ export const getGames = async () => {
     console.error("Error fetching games:", error)
     throw error
   }
+}
+
+// Función para obtener juegos populares
+export const getGamesByDate = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&ordering=-released&page_size=40`)
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`)
+      }
+  
+      const data = await response.json()
+      return data.results
+    } catch (error) {
+      console.error("Error fetching games:", error)
+      throw error
+    }
+}
+
+// Función para obtener juegos populares
+export const getGamesByName = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&ordering=-name&page_size=40`)
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`)
+      }
+  
+      const data = await response.json()
+      return data.results
+    } catch (error) {
+      console.error("Error fetching games:", error)
+      throw error
+    }
 }
 
 // Función para obtener detalles de un juego específico
@@ -37,7 +71,7 @@ export const getGameDetails = async (gameId) => {
 // Función para buscar juegos según el término de búsqueda
 export const searchGames = async (searchTerm) => {
     try {
-        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&search=${searchTerm}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&search=${searchTerm}&page_size=40`)
 
     if (!response.ok) {
         throw new Error(`Error: ${response.status}`)
@@ -55,7 +89,7 @@ export const searchGames = async (searchTerm) => {
 // Función para obtener juegos por género
 export const getGamesByGenre = async (genreId) => {
     try {
-        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&genres=${genreId}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&genres=${genreId}&page_size=40`)
 
         if (!response.ok) {
         throw new Error(`Error: ${response.status}`)
@@ -78,7 +112,7 @@ export const getUpcomingGames = async () => {
 
         // Obtener juegos que se lanzarán después de hoy
         const response = await fetch(
-        `${BASE_URL}/games?key=${API_KEY}&dates=${formattedDate},2025-12-31&ordering=released&page_size=20`,
+        `${BASE_URL}/games?key=${API_KEY}&dates=${formattedDate},2025-12-31&ordering=released&page_size=40`,
         )
 
         if (!response.ok) {
@@ -96,7 +130,7 @@ export const getUpcomingGames = async () => {
 // Función para obtener juegos por publisher
 export const getGamesByPublisher = async (publisherId) => {
     try {
-        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&publishers=${publisherId}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&publishers=${publisherId}&page_size=40`)
 
         if (!response.ok) {
         throw new Error(`Error: ${response.status}`)
@@ -128,7 +162,7 @@ export const getPublisherDetails = async (publisherId) => {
 // Función para obtener juegos por tag
 export const getGamesByTag = async (tagId) => {
     try {
-        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&tags=${tagId}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/games?key=${API_KEY}&tags=${tagId}&page_size=40`)
 
         if (!response.ok) {
         throw new Error(`Error: ${response.status}`)
@@ -160,14 +194,14 @@ export const getTagDetails = async (tagId) => {
 // Función para obtener lista de publishers
 export const getPublishers = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/publishers?key=${API_KEY}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/publishers?key=${API_KEY}&page_size=40`)
 
         if (!response.ok) {
         throw new Error(`Error: ${response.status}`)
         }
 
         const data = await response.json()
-        return data.results
+        return data
     } catch (error) {
         console.error("Error fetching publishers:", error)
         throw error
@@ -177,7 +211,7 @@ export const getPublishers = async () => {
 // Función para buscar publishers
 export const searchPublishers = async (searchTerm) => {
     try {
-        const response = await fetch(`${BASE_URL}/publishers?key=${API_KEY}&search=${searchTerm}&page_size=20`)
+        const response = await fetch(`${BASE_URL}/publishers?key=${API_KEY}&search=${searchTerm}&page_size=40`)
 
         if (!response.ok) {
         throw new Error(`Error: ${response.status}`)

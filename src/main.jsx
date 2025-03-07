@@ -1,5 +1,7 @@
 import { RouterProvider, createBrowserRouter, Outlet } from  'react-router'
 import { createRoot } from 'react-dom/client'
+import { Provider } from "react-redux"
+import { store } from "./redux/store"
 import './index.css'
 import Home from './pages/homePage/Home'
 import ErrorPage from './pages/errorPage/ErrorPage'
@@ -10,6 +12,8 @@ import GameDetail, { loader as gameDetailsLoader } from './pages/GameDetail/Game
 import PublisherPage, { loader as publisherDetailsLoader } from './pages/PublisherPage/PublisherPage'
 import TagGamesPage, { loader as tagDetailsLoader} from './pages/TagGamesPage/TagGamesPage'
 import PublishersPage from './pages/PublishersPage/PublishersPage'
+import EventosPage from './pages/EventosPage/EventosPage'
+import FavoritosPage from './pages/FavoritosPage/FavoritosPage'
 
 function AppLayout(){
   return(
@@ -39,6 +43,14 @@ const router = createBrowserRouter([
         element: <PublishersPage />
       },
       {
+        path: '/perfil/favoritos',
+        element: <FavoritosPage />
+      },
+      {
+        path: '/perfil/eventos',
+        element: <EventosPage />
+      },
+      {
         path: '/gameDetail/:id',
         element: <GameDetail />,
         loader: gameDetailsLoader
@@ -58,5 +70,7 @@ const router = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}/>
+  <Provider store={store}>
+    <RouterProvider router={router}/>
+  </Provider>
 )
